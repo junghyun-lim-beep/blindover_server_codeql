@@ -26,6 +26,7 @@ dependencies {
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'org.pytorch:pytorch_java_only:1.9.0'
 }
 
 tasks.named('test') {
