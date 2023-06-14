@@ -7,9 +7,9 @@ import os
 from fastapi.middleware.cors import CORSMiddleware
 from colabcode import ColabCode
 from loguru import logger
-from testingColabCode import test
+# from testingColabCode import test
 
-cc = ColabCode(port=8000, code=False)
+# cc = ColabCode(port=8000, code=False)
 
 model = torch.load('shufflenet_weight.pt', map_location=torch.device('cpu'))
 
@@ -72,4 +72,4 @@ def data받기(data : Model):
   print(data)
   return '전송완료'
 
-cc.run_app(app=app)
+# cc.run_app(app=app)
