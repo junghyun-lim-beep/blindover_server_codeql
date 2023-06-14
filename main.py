@@ -5,9 +5,9 @@ from PIL import Image
 import torch
 import os
 from fastapi.middleware.cors import CORSMiddleware
-from colabcode import ColabCode
+# from colabcode import ColabCode
 from loguru import logger
-# from testingColabCode import test
+from testingColabCode import test
 
 # cc = ColabCode(port=8000, code=False)
 
