@@ -4,13 +4,27 @@ from torchvision.transforms import ToTensor
 from PIL import Image
 import torch
 import os
+from fastapi.middleware.cors import CORSMiddleware
 
 from loguru import logger
 
 
 model = torch.load('shufflenet_weight.pt', map_location=torch.device('cpu'))
 
+
 app = FastAPI()
+
+origins = [
+    "*"
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.post("/photo")
@@ -28,6 +42,10 @@ async def create_upload_file(file: UploadFile = File(...)):
   # image = ToTensor()(Image.open(file.file))
   # output = model(image)
   # logger.info("Classify Result = {}", output)
+  print({
+      "content_type": file.content_type,
+      "filename": file.filename
+  })
   return {
       "content_type": file.content_type,
       "filename": file.filename
