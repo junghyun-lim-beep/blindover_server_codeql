@@ -25,9 +25,9 @@ async def create_upload_file(file: UploadFile = File(...)):
   #     fp.write(content)
   # print("@@@@@@@@@@이미지 업로드 완료!! @@@@@@@@@@@")
   ####################################################################################
-  image = ToTensor()(Image.open(file.file))
-  output = model(image)
-  logger.info("Classify Result = {}", output)
+  # image = ToTensor()(Image.open(file.file))
+  # output = model(image)
+  # logger.info("Classify Result = {}", output)
   return {
       "content_type": file.content_type,
       "filename": file.filename

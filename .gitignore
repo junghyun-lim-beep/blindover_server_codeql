@@ -2,3 +2,4 @@
 .idea
 *.pth
 /photo
+.DS_Store
