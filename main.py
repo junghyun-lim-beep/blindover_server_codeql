@@ -8,6 +8,9 @@ from fastapi.middleware.cors import CORSMiddleware
 # from colabcode import ColabCode
 from loguru import logger
 from testingColabCode import test
+from inference import inference
+from inference import load_model
+from inference import load_image
 
 # cc = ColabCode(port=8000, code=False)
 
@@ -44,14 +47,17 @@ async def create_upload_file(file: UploadFile = File(...)):
   # image = ToTensor()(Image.open(file.file))
   # output = model(image)
   # logger.info("Classify Result = {}", output)
+
+
+  model = load_model("shufflenet", "./shufflenet_weight.pt")
+  img, src = load_image("./photo/test.jpg")
+  result = inference(img, model)
+  print(result)
   print({
       "content_type": file.content_type,
       "filename": file.filename
   })
-  return {
-      "content_type": file.content_type,
-      "filename": file.filename
-  }
+  return result
 
 
 
