@@ -47,7 +47,7 @@ async def create_upload_file(file: UploadFile = File(...)):
 
 
   start = time.time()
-  img, src = load_image("./cola_front.JPG")
+  img = load_image(file)
   result = inference(img, model)
   print(result)
   print(time.time() - start)

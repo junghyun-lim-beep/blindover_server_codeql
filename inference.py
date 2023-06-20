@@ -13,6 +13,8 @@ from models.mnasnet import MNASNet
 from models.mobilenet import MobileNetV3
 from models.shufflenet import ShuffleNetV2
 
+from fastapi import File, UploadFile
+
 transformation = transforms.Compose([
         Padding(fill=(0,0,0)),
         transforms.Resize((224,224)),
@@ -31,11 +33,15 @@ classes = {
 }
 
 
-def load_image(src: str):    
-    img = Image.open(src).convert('RGB')
+def load_image(file: UploadFile = File(...)):    
+    print(
+      "{\n  content_type : "+ file.content_type+
+      "\n   filename : "+ file.filename + "\n}"
+    )
+    img = Image.open(file.file).convert('RGB')
     img = transformation(img)
     img = img.unsqueeze(dim=0)
-    return img, src
+    return img
 
 
 def inference(src: torch.Tensor, model: nn.Module):
