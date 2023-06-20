@@ -5,17 +5,14 @@ from PIL import Image
 import torch
 import os
 from fastapi.middleware.cors import CORSMiddleware
-# from colabcode import ColabCode
 from loguru import logger
-from testingColabCode import test
 from inference import inference
-from inference import load_model
 from inference import load_image
+from inference import model
+import time
 
+# from colabcode import ColabCode
 # cc = ColabCode(port=8000, code=False)
-
-model = torch.load('shufflenet_weight.pt', map_location=torch.device('cpu'))
-
 
 app = FastAPI()
 
@@ -49,14 +46,11 @@ async def create_upload_file(file: UploadFile = File(...)):
   # logger.info("Classify Result = {}", output)
 
 
-  model = load_model("shufflenet", "./shufflenet_weight.pt")
-  img, src = load_image("./photo/test.jpg")
+  start = time.time()
+  img, src = load_image("./cola_front.JPG")
   result = inference(img, model)
   print(result)
-  print({
-      "content_type": file.content_type,
-      "filename": file.filename
-  })
+  print(time.time() - start)
   return result
 
 
