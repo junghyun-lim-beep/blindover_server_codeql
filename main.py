@@ -64,7 +64,6 @@ class Model(BaseModel):
 
 @app.get("/")
 def 이름():
-  test()
   return '보낼 값'
 
 @app.post("/send")

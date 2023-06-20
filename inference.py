@@ -91,8 +91,9 @@ def get_args_parser():
     return parser
 
 
-# def main(args):
 model = load_model("shufflenet", "./shufflenet_weight.pt")
+
+# def main(args):
 
 #     model = load_model(args.model_name, args.weight)
 #     img, src = load_image(args.src)
