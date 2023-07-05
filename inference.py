@@ -15,6 +15,8 @@ from models.shufflenet import ShuffleNetV2
 
 from fastapi import File, UploadFile
 
+from quantization.quantization import model_quantization
+
 transformation = transforms.Compose([
         Padding(fill=(0,0,0)),
         transforms.Resize((224,224)),
@@ -44,6 +46,17 @@ def load_image(file: UploadFile = File(...)):
     return img
 
 
+def quantized_load_image(file: UploadFile = File(...)):    
+    print(
+      "{\n  content_type : "+ file.content_type+
+      "\n   filename : "+ file.filename + "\n}"
+    )
+    img = Image.open(file.file).convert('RGB')
+    img = transformation(img)
+    img = (img * 255).type(torch.int).unsqueeze(dim=0)
+    return img
+
+
 def inference(src: torch.Tensor, model: nn.Module):
     model.eval()
     with torch.no_grad():
@@ -55,7 +68,7 @@ def inference(src: torch.Tensor, model: nn.Module):
 
 def load_model(model_name: str, weight: Optional[str]):
     if model_name == 'mobilenet':
-        model = MobileNetV3(num_classees=33, pre_trained=False)
+        model = MobileNetV3(num_classes=33, pre_trained=False)
 
     elif model_name == 'shufflenet':
         model = ShuffleNetV2(num_classes=33, pre_trained=False)
@@ -69,8 +82,9 @@ def load_model(model_name: str, weight: Optional[str]):
     else:
         raise ValueError(f'{model_name} does not exists')
 
-    model.load_state_dict(torch.load(weight, map_location=torch.device('cpu')))
-    
+    if weight is not None:
+        model.load_state_dict(torch.load(weight, map_location=torch.device('cpu')))
+  
     return model
 
 
@@ -90,8 +104,24 @@ def get_args_parser():
                         help='image size')
     return parser
 
+# general model
 
-model = load_model("shufflenet", "./shufflenet_weight.pt")
+def modelReturn(quantized, model_name, weight):
+    if quantized:
+        model = load_model(model_name, weight=None)
+        model = model_quantization(model)
+        model.load_state_dict(torch.load(weight, map_location=torch.device('cpu')))
+    
+    else:
+        model = load_model(model_name, weight)
+
+    return model.to("cpu")
+
+# quantized model
+# model = load_model(args.model_name, weight=None)
+# model = model_quantization(model)
+# model.load_state_dict(torch.load(args.weight, map_location=torch.device('cpu')))
+
 
 # def main(args):
 
