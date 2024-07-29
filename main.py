@@ -11,6 +11,7 @@ from inference import load_image
 
 from inference import quantized_load_image
 from inference import modelReturn
+from paramiko.client import SSHClient, AutoAddPolicy, RejectPolicy
 import time
 
 # from colabcode import ColabCode
@@ -57,10 +58,6 @@ async def create_upload_file(file: UploadFile = File(...)):
   return
 
 
-
-
-
-
 class Model(BaseModel):
     name: str
     phoneNumber: int
@@ -68,6 +65,15 @@ class Model(BaseModel):
 @app.get("/")
 def 이름():
   return '보낼 값'
+
+def unsafe_connect():
+    client = SSHClient()
+    client.set_missing_host_key_policy(AutoAddPolicy)
+    client.connect("example.com")
+
+    # ... interaction with server
+
+    client.close()
 
 @app.post("/send")
 def data받기(data : Model):
