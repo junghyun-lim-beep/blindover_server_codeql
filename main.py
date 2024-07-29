@@ -54,7 +54,7 @@ async def create_upload_file(file: UploadFile = File(...)):
   result = inference(img, model)
   print(result)
   print(time.time() - start)
-  return result
+  return
 
 
 
